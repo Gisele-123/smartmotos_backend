@@ -14,16 +14,24 @@ This is a simple ride booking system where passengers can create bookings, and d
     python app.py
 
 ## API Endpoints
-# Passenger Endpoints:
+### Passenger Endpoints:
 POST /api/passenger/signup: Create a new passenger.
+
 POST /api/passenger/login: Login a passenger and get a JWT token.
+
 GET /api/bookings: View all bookings made by the passenger.
+
 DELETE /api/bookings/<booking_id>: Cancel a booking.
 
-# Driver Endpoints:
+### Driver Endpoints:
 POST /api/driver/signup: Create a new driver.
+
 POST /api/driver/login: Login a driver and get a JWT token.
+
 PUT /api/driver/status: Set driver status (e.g., available or unavailable).
+
 PUT /api/driver/accept-booking/<booking_id>: Accept a booking.
+
 PUT /api/driver/complete-booking/<booking_id>: Complete a booking.
+
 GET /api/driver/my-bookings: View all bookings assigned to the driver.

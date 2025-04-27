@@ -247,8 +247,8 @@ python-dotenv==1.0.1
 python3-openid==3.2.0
 pythreejs==2.4.2
 pytz==2020.1
-pywin32==306
-pywin32-ctypes==0.2.3
+# pywin32==306
+# pywin32-ctypes==0.2.3
 PyYAML==6.0.2
 pyzbar==0.1.9
 qrcode==8.0

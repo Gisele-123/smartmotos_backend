@@ -143,12 +143,12 @@ jupyterlab_widgets==3.0.13
 keras==3.9.1
 key==0.4
 keyring==25.3.0
-Kivy==2.3.1
-kivy-deps.angle==0.4.0
-kivy-deps.glew==0.3.1
-Kivy-Garden==0.1.5
-kivy_deps.sdl2==0.8.0
-kiwisolver==1.4.7
+# Kivy==2.3.1
+# kivy-deps.angle==0.4.0
+# kivy-deps.glew==0.3.1
+# Kivy-Garden==0.1.5
+# kivy_deps.sdl2==0.8.0
+# kiwisolver==1.4.7
 libclang==18.1.1
 lief==0.16.3
 love==0.0.3

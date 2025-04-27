@@ -78,7 +78,7 @@ pytidylib==0.3.2
 pytz==2020.1
 # pywin32==306
 PyYAML==6.0.2
-PyYAML==6.0.2
+# PyYAML==6.0.2
 redis==5.2.1
 scikit_learn==1.6.1
 scikits.talkbox==0.2.5

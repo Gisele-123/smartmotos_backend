@@ -14,6 +14,10 @@ This is a simple ride booking system where passengers can create bookings, and d
     python app.py
 
 ## API Endpoints
+
+### Render deployment:
+https://smartmotos-backend.onrender.com
+
 ### Passenger Endpoints:
 POST /api/passenger/signup: Create a new passenger.
 

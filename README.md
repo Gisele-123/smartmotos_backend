@@ -19,11 +19,13 @@ This is a simple ride booking system where passengers can create bookings, and d
 https://smartmotos-backend.onrender.com
 
 ### Passenger Endpoints:
-POST /api/passenger/signup: Create a new passenger.
+POST /api/signup: Create a new passenger.
 
-POST /api/passenger/login: Login a passenger and get a JWT token.
+POST /api/login: Login a passenger and get a JWT token.
 
 GET /api/bookings: View all bookings made by the passenger.
+
+POST /api/booking: new booking
 
 DELETE /api/bookings/<booking_id>: Cancel a booking.
 

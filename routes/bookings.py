@@ -42,7 +42,7 @@ def create_booking(current_user):
     dropoff_location = data.get('dropoff_location')
     pickup_time = datetime.datetime.strptime(data.get('pickup_time'), "%Y-%m-%dT%H:%M:%S")
     payment_method = data.get('payment_method')
-    waypoints = data.get('waypoints', [])
+    waypoints = data.get('waypoints', []) # optinal for a person maybe ushaka kuba yagenda ahagarara munzira
     driver_id = data.get('driver_id')  
 
     driver = Driver.query.filter_by(id=driver_id, status='available').first()

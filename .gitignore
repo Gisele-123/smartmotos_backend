@@ -1,5 +1,4 @@
 /jax_tf_env/
-config.py
 /__pycache__/
 .env
 *.env

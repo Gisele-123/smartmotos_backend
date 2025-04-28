@@ -1,51 +1,49 @@
 #######################################
-### CORE DEPENDENCIES (ESSENTIAL) ###
+### CORE APPLICATION DEPENDENCIES ###
 #######################################
-Flask==3.1.0                  # Web framework
-flask_sqlalchemy==3.1.1       # Database integration
-Flask_Migrate==4.1.0          # Database migrations
-redis==5.2.1                  # Caching
-Pillow==11.2.1                # Image processing
-pandas==2.2.3                 # Data analysis
-matplotlib==3.10.1            # Visualization
-scikit_learn==1.6.1           # Machine learning
+Flask==3.1.0
+flask_sqlalchemy==3.1.1
+Flask_Migrate==4.1.0
+redis==5.2.1
+
+#######################################
+### DATA PROCESSING & ML ###
+#######################################
+numpy==1.26.4
+pandas==2.2.3
+scikit_learn==1.6.1
+matplotlib==3.10.1
+Pillow==11.2.1
+dill==0.4.0
 
 #######################################
 ### NETWORK & SECURITY ###
 #######################################
-boto3==1.38.3                 # AWS SDK
-botocore==1.38.3              # AWS low-level interface
-requests==2.31.0              # HTTP requests
-pyOpenSSL==25.0.0             # Cryptography (keep only one version)
-cryptography==42.0.5          # Additional security
-grpcio==1.71.0                # gRPC core
-grpcio-tools==1.71.0          # gRPC tools
-protobuf==4.25.0              # Protocol buffers
+boto3==1.38.3
+botocore==1.38.3
+requests==2.31.0
+pyOpenSSL==25.0.0
+cryptography==42.0.5
 
 #######################################
-### UTILITIES ###
+### GRPC & PROTOBUF ###
 #######################################
-numpy==1.26.4                 # Numerical computing
-dill==0.4.0                   # Extended pickle
-psutil==6.0.0                 # System monitoring
-pytest==8.3.3                 # Testing framework
-Sphinx==8.2.3                 # Documentation
-filelock==3.18.0              # File locking
-python-dotenv==1.0.1          # Environment variables
+grpcio==1.71.0
+grpcio-tools==1.71.0
+protobuf==5.26.1  # Must be >=5.26.1 for grpcio-tools 1.71.0
 
 #######################################
-### OPTIONAL (COMMENT IF NOT NEEDED) ###
+### DEVELOPMENT & UTILITIES ###
 #######################################
-# tensorflow==2.17.0          # ML framework - large dependency
-# opencv-python-headless==4.11.0.86  # Computer vision (headless version)
-# jupyter==1.0.0              # Notebooks (not needed in production)
-# ipython==8.12.3             # Interactive Python
+python-dotenv==1.0.1
+psutil==6.0.0
+filelock==3.18.0
+Sphinx==8.2.3
+pytest==8.3.3
 
 #######################################
-### DEPRECATED/REMOVED PACKAGES ###
+### BUILD DEPENDENCIES ###
 #######################################
-# pywin32==306                # Windows-only (removed)
-# jnius==1.1.0                # Requires Java (removed)
-# pickle5==0.0.12             # Built into Python 3.8+ (removed)
-# pyodide==0.0.2              # Browser-only (removed)
-# tensorflow_io==0.37.1       # Problematic in cloud (removed)
+Cython==3.0.12
+wheel==0.43.0
+setuptools==69.5.1

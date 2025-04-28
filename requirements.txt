@@ -63,7 +63,7 @@ objgraph==3.6.2
 # opencv_python==4.11.0.86
 optax==0.2.4
 pandas==2.2.3
-pickle5==0.0.12
+# pickle5==0.0.12
 Pillow==11.2.1
 pkg1==0.0.3
 pooch==1.8.2

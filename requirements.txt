@@ -28,7 +28,7 @@ grpcio_reflection==1.71.0
 grpcio-tools==1.71.0 
 grpcio==1.71.0  
 protobuf>=4.25.0
-# grpcio-tools>=1.62.0
+# grpcio-tools>=1.62.0F
 h2==3.2.0
 h5==0.10.1
 HTMLParser==0.0.2
@@ -40,6 +40,8 @@ ini2toml==0.15
 ipython==8.12.3
 ipywidgets==8.1.5
 jax_cuda12_plugin==0.6.0
+Cython==3.0.12  # Must be before jnius
+jnius==1.1.0
 jnius==1.1.0
 jraph==0.0.6.dev0
 js==1.0

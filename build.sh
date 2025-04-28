@@ -1,5 +1,6 @@
-# build.sh
 #!/bin/bash
+# Install build dependencies first
 pip install --upgrade pip
-pip install grpcio-tools==1.71.0
+pip install Cython==3.0.12 wheel setuptools
+# Then install requirements
 pip install -r requirements.txt

@@ -40,9 +40,9 @@ ini2toml==0.15
 ipython==8.12.3
 ipywidgets==8.1.5
 jax_cuda12_plugin==0.6.0
-Cython==3.0.12  # Must be before jnius
-jnius==1.1.0
-jnius==1.1.0
+# Cython==3.0.12  # Must be before jnius
+# jnius==1.1.0
+# jnius==1.1.0
 jraph==0.0.6.dev0
 js==1.0
 keyring==25.3.0

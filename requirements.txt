@@ -25,7 +25,7 @@ fsspec==2024.2.0
 google_api_python_client==2.160.0
 grpc_tools==1.0.0
 grpcio_reflection==1.71.0
-grpcio>=1.62.0
+grpcio-tools>=1.62.0
 protobuf>=4.25.0
 grpcio-tools>=1.62.0
 h2==3.2.0

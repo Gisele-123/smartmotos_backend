@@ -5,6 +5,9 @@ import datetime
 from functools import wraps
 import jwt
 from config import Config
+from flutterwave import initialize_payment
+import uuid
+
 
 booking_bp = Blueprint('booking', __name__)
 
@@ -42,13 +45,22 @@ def create_booking(current_user):
     dropoff_location = data.get('dropoff_location')
     pickup_time = datetime.datetime.strptime(data.get('pickup_time'), "%Y-%m-%dT%H:%M:%S")
     payment_method = data.get('payment_method')
-    waypoints = data.get('waypoints', []) # optinal for a person maybe ushaka kuba yagenda ahagarara munzira
-    driver_id = data.get('driver_id')  
+    waypoints = data.get('waypoints', [])
+    driver_id = data.get('driver_id')
 
     driver = Driver.query.filter_by(id=driver_id, status='available').first()
-
     if not driver:
-        return jsonify({'message': 'The selected driver is not available or does not exist'}), 400
+        return jsonify({'message': 'The selected driver is not available'}), 400
+
+    fare = PRICING['base_fare']
+
+    tx_ref = str(uuid.uuid4())
+    redirect_url = "https://yourdomain.com/payment/callback"  # Replace with your real frontend URL
+
+    payment_response = initialize_payment(fare, current_user.email, tx_ref, redirect_url)
+
+    if payment_response["status"] != "success":
+        return jsonify({"message": "Payment initialization failed"}), 400
 
     booking = Booking(
         passenger_id=current_user.id,
@@ -57,17 +69,37 @@ def create_booking(current_user):
         dropoff_location=dropoff_location,
         pickup_time=pickup_time,
         payment_method=payment_method,
-        status='pending'
+        status='pending',
+        fare=fare,
+        payment_status='pending'
     )
 
     db.session.add(booking)
     db.session.commit()
 
-    return jsonify({'message': 'Booking created successfully'}), 201
+    return jsonify({
+        'message': 'Booking created successfully. Proceed to payment.',
+        'payment_link': payment_response["data"]["link"],
+        'booking_id': booking.id
+    }), 201
+
+@booking_bp.route('/api/payment/callback', methods=['GET'])
+def payment_callback():
+    status = request.args.get('status')
+    tx_ref = request.args.get('tx_ref')
+    transaction_id = request.args.get('transaction_id')
+
+    if status == 'successful':
+        booking = Booking.query.filter_by(payment_status='pending').filter(Booking.status != 'cancelled').first()
+        if booking:
+            booking.payment_status = 'paid'
+            db.session.commit()
+            return jsonify({'message': 'Payment verified and updated'}), 200
+
+    return jsonify({'message': 'Payment failed or cancelled'}), 400
 
 @booking_bp.route('/api/bookings', methods=['GET'])
 @token_required
-
 def get_bookings(current_user):
     bookings = Booking.query.filter_by(passenger_id=current_user.id).all()
     return jsonify([{
@@ -76,7 +108,9 @@ def get_bookings(current_user):
         'dropoff_location': b.dropoff_location,
         'pickup_time': b.pickup_time.isoformat(),
         'payment_method': b.payment_method,
-        'status': b.status
+        'status': b.status,
+        'fare': b.fare,
+        'payment_status': b.payment_status
     } for b in bookings]), 200
 
 @booking_bp.route('/api/bookings/<int:booking_id>', methods=['PUT'])

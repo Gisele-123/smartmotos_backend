@@ -25,7 +25,7 @@ POST /api/login: Login a passenger and get a JWT token.
 
 GET /api/bookings: View all bookings made by the passenger.
 
-POST /api/booking: new booking
+POST /api/bookings: new booking
 
 DELETE /api/bookings/<booking_id>: Cancel a booking.
 

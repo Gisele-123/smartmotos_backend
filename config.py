@@ -11,3 +11,6 @@ class Config:
     TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
     TWILIO_VERIFY_SERVICE_SID = os.getenv('TWILIO_VERIFY_SERVICE_SID')
     APP_NAME = os.getenv('APP_NAME')
+    FLW_SECRET_KEY = os.getenv('FLW_SECRET_KEY')
+    FLW_PUBLIC_KEY = os.getenv('FLW_PUBLIC_KEY')
+    FLW_ENCRYPTION_KEY = os.getenv('FLW_ENCRYPTION_KEY')

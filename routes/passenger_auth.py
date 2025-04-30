@@ -127,3 +127,53 @@ def passenger_login():
         }
     }), 200
 
+@auth_bp.route('/api/password/forgot', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    phone = data.get('phone')
+
+    if not phone:
+        return jsonify({'error': 'Phone number is required'}), 400
+
+    passenger = Passenger.query.filter_by(phone=phone).first()
+
+    if not passenger:
+        return jsonify({'error': 'Passenger not found'}), 404
+
+    if send_phone_verification(phone):
+        return jsonify({'message': 'Verification code sent via SMS'}), 200
+    else:
+        return jsonify({'error': 'Failed to send verification code'}), 500
+
+@auth_bp.route('/api/password/reset', methods=['POST'])
+def reset_password():
+    data = request.get_json()
+    phone = data.get('phone')
+    code = data.get('code')
+    new_password = data.get('new_password')
+    confirm_password = data.get('confirm_password')
+
+    if not all([phone, code, new_password, confirm_password]):
+        return jsonify({'error': 'All fields are required'}), 400
+
+    if new_password != confirm_password:
+        return jsonify({'error': 'Passwords do not match'}), 400
+
+    passenger = Passenger.query.filter_by(phone=phone).first()
+    if not passenger:
+        return jsonify({'error': 'Passenger not found'}), 404
+
+    try:
+        client = get_twilio_client(current_app)
+        verification_check = client.verify.v2.services(current_app.config['TWILIO_VERIFY_SERVICE_SID']) \
+            .verification_checks.create(to=phone, code=code)
+
+        if verification_check.status == 'approved':
+            passenger.password = generate_password_hash(new_password)
+            db.session.commit()
+            return jsonify({'message': 'Password reset successful'}), 200
+        else:
+            return jsonify({'error': 'Invalid verification code'}), 400
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

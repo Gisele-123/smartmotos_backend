@@ -12,7 +12,7 @@ import uuid
 booking_bp = Blueprint('booking', __name__)
 
 PRICING = {
-    'base_fare': 50,
+    'base_fare': 500,
     'per_km': 10,
     'per_minute': 1
 }
@@ -55,7 +55,7 @@ def create_booking(current_user):
     fare = PRICING['base_fare']
 
     tx_ref = str(uuid.uuid4())
-    redirect_url = "https://yourdomain.com/payment/callback"  # Replace with your real frontend URL
+    redirect_url = "https://yourdomain.com/payment/callback" # don't have frontend url so far
 
     payment_response = initialize_payment(fare, current_user.email, tx_ref, redirect_url)
 
@@ -113,6 +113,24 @@ def get_bookings(current_user):
         'payment_status': b.payment_status
     } for b in bookings]), 200
 
+@booking_bp.route('/api/bookings/<int:booking_id>', methods=['GET'])
+@token_required
+def get_booking_by_id(current_user, booking_id):
+    booking = Booking.query.filter_by(id=booking_id, passenger_id=current_user.id).first()
+    if not booking:
+        return jsonify({'message': 'Booking not found'}), 404
+
+    return jsonify({
+        'id': booking.id,
+        'pickup_location': booking.pickup_location,
+        'dropoff_location': booking.dropoff_location,
+        'pickup_time': booking.pickup_time.isoformat(),
+        'payment_method': booking.payment_method,
+        'status': booking.status,
+        'fare': booking.fare,
+        'payment_status': booking.payment_status
+    }), 200
+
 @booking_bp.route('/api/bookings/<int:booking_id>', methods=['PUT'])
 @token_required
 def update_booking(current_user, booking_id):
@@ -139,5 +157,3 @@ def cancel_booking(current_user, booking_id):
     db.session.commit()
 
     return jsonify({'message': 'Booking cancelled successfully'}), 200
-
-

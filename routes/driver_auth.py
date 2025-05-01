@@ -4,7 +4,6 @@ from extensions import db, get_twilio_client, get_twilio_service_verify_sid
 import jwt
 from datetime import datetime, timedelta
 from config import Config
-
 driver_auth_bp = Blueprint('driver_auth', __name__)
 
 @driver_auth_bp.route('/api/driver/signup', methods=['POST'])

@@ -19,6 +19,8 @@ def driver_token_required(f):
         try:
             data = jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
             current_driver = Driver.query.get(data['id'])
+            if not current_driver:
+                return jsonify({'message': 'Driver not found'}), 404
         except jwt.ExpiredSignatureError:
             return jsonify({'message': 'Token expired'}), 401
         except jwt.InvalidTokenError:
@@ -78,3 +80,4 @@ def complete_booking(current_driver, booking_id):
     db.session.commit()
 
     return jsonify({'message': 'Booking completed successfully'}), 200
+

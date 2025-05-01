@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from sqlalchemy import func
 from extensions import db
 
 class Passenger(db.Model):
@@ -30,10 +32,14 @@ class Booking(db.Model):
 
 class Driver(db.Model):
     __tablename__ = 'drivers'
+
     id = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.String(20), default='not_active')
+    status = db.Column(db.String(20))
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    location_updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class DriverAvailability(db.Model):
     __tablename__ = 'driver_availabilities'
@@ -60,3 +66,13 @@ class RouteDistance(db.Model):
     def as_tuple(self):
         return (self.start_location.lower(), self.end_location.lower())
     
+class DriverLocation(db.Model):
+    __tablename__ = 'driver_locations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'), nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    driver = db.relationship('Driver', backref=db.backref('location', uselist=False))

@@ -23,6 +23,7 @@ def create_app():
     from routes.driver_auth import driver_auth_bp
     from routes.driver_status import driver_status_bp
     from routes.driver_bookings import driver_bookings_bp
+    from routes.passenger_location import passenger_location_bp
 
     # Register blueprints
     app.register_blueprint(auth_bp)
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(driver_auth_bp)
     app.register_blueprint(driver_status_bp)
     app.register_blueprint(driver_bookings_bp)
+    app.register_blueprint(passenger_location_bp)
 
     return app
 

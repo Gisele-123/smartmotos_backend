@@ -74,7 +74,7 @@ def haversine(lat1, lon1, lat2, lon2):
 def get_nearby_drivers():
     lat = float(request.args.get('lat'))
     lng = float(request.args.get('lng'))
-    radius_km = float(request.args.get('radius', 5))  # default 5km
+    radius_km = float(request.args.get('radius', 2)) 
 
     all_drivers = Driver.query.filter_by(status='available').all()
 

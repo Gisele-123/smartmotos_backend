@@ -13,6 +13,10 @@ class Passenger(db.Model):
     phone_verified = db.Column(db.Boolean, default=False)
     verification_code = db.Column(db.String(6))
     verification_expiry = db.Column(db.DateTime)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float) 
+    location_updated_at = db.Column(db.DateTime)
+    need_bike = db.Column(db.Boolean, default=False)
     bookings = db.relationship('Booking', backref='passenger', lazy=True)
 
 class Booking(db.Model):

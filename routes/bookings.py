@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import Booking, Passenger, Driver
+from models import Booking, Passenger, Driver, RouteDistance
 from extensions import db
 import datetime
 from functools import wraps
@@ -24,11 +24,12 @@ DISTANCE_MAP = {
 }
 
 def get_distance(pickup, dropoff):
-    route = route.query.filter(
-        (route.origin.ilike(pickup) & route.destination.ilike(dropoff)) |
-        (route.origin.ilike(dropoff) & route.destination.ilike(pickup))
+    route = RouteDistance.query.filter(
+        ((RouteDistance.start_location.ilike(pickup) & RouteDistance.end_location.ilike(dropoff)) |
+         (RouteDistance.start_location.ilike(dropoff) & RouteDistance.end_location.ilike(pickup)))
     ).first()
     return route.distance_km if route else None
+
 
 def token_required(f):
     @wraps(f)

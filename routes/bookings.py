@@ -17,6 +17,19 @@ PRICING = {
     'per_minute': 1
 }
 
+DISTANCE_MAP = {
+    ('Masaka Hospital, Kigali', 'Nyabugogo tax park'): 24.8,
+    ('Nyabugogo tax park', 'Bank of Kigali'): 8.1,
+    ('Kimironko market', 'African leadership university'): 5.1,
+}
+
+def get_distance(pickup, dropoff):
+    route = route.query.filter(
+        (route.origin.ilike(pickup) & route.destination.ilike(dropoff)) |
+        (route.origin.ilike(dropoff) & route.destination.ilike(pickup))
+    ).first()
+    return route.distance_km if route else None
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -52,7 +65,11 @@ def create_booking(current_user):
     if not driver:
         return jsonify({'message': 'The selected driver is not available'}), 400
 
-    fare = PRICING['base_fare']
+    distance = get_distance(pickup_location, dropoff_location)
+    if distance is None:
+        return jsonify({'message': 'Route not found for fare estimation'}), 400
+
+    fare = PRICING['base_fare'] + (PRICING['per_km'] * distance)
 
     tx_ref = str(uuid.uuid4())
     redirect_url = "https://yourdomain.com/payment/callback" # don't have frontend url so far

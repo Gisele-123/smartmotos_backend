@@ -48,3 +48,15 @@ class Bike(db.Model):
     status = db.Column(db.String(20), default='available')
     driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'), nullable=True)
     driver = db.relationship('Driver', backref=db.backref('bikes', lazy=True))
+
+class RouteDistance(db.Model):
+    __tablename__ = 'route_distances'
+
+    id = db.Column(db.Integer, primary_key=True)
+    start_location = db.Column(db.String(100), nullable=False)
+    end_location = db.Column(db.String(100), nullable=False)
+    distance_km = db.Column(db.Float, nullable=False)
+
+    def as_tuple(self):
+        return (self.start_location.lower(), self.end_location.lower())
+    

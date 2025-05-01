@@ -13,15 +13,10 @@ booking_bp = Blueprint('booking', __name__)
 
 PRICING = {
     'base_fare': 500,
-    'per_km': 10,
+    'per_km': 30,
     'per_minute': 1
 }
 
-DISTANCE_MAP = {
-    ('Masaka Hospital, Kigali', 'Nyabugogo tax park'): 24.8,
-    ('Nyabugogo tax park', 'Bank of Kigali'): 8.1,
-    ('Kimironko market', 'African leadership university'): 5.1,
-}
 
 def get_distance(pickup, dropoff):
     route = RouteDistance.query.filter(

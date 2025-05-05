@@ -241,14 +241,3 @@ All endpoints (except public ones) require JWT in header:
 | 404  | Not Found             |
 | 500  | Internal Server Error |
 ```
-
-This comprehensive README includes:
-1. All API endpoints with request/response examples
-2. Complete authentication requirements
-3. Detailed testing instructions
-4. Payment flow explanation
-5. Error code reference
-6. Real-time demand tracking endpoints
-7. Clear setup instructions
-
-The documentation is ready to copy-paste into your project and provides everything needed for developers to integrate with your API.

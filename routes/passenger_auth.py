@@ -32,7 +32,7 @@ def send_custom_verification_sms(phone_number):
 def send_phone_verification(phone_number):
     return send_custom_verification_sms(phone_number)
 
-@auth_bp.route('/api/signup', methods=['POST'])
+@auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
     required_fields = ['name', 'email', 'phone', 'password', 'confirm_password']
@@ -69,7 +69,7 @@ def signup():
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-@auth_bp.route('/api/verify/phone', methods=['POST'])
+@auth_bp.route('/verify/phone', methods=['POST'])
 def verify_phone():
     data = request.get_json()
     phone = data.get('phone')
@@ -96,7 +96,7 @@ def verify_phone():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@auth_bp.route('/api/login', methods=['POST'])
+@auth_bp.route('/login', methods=['POST'])
 def passenger_login():
     data = request.get_json()
     phone = data.get('phone')
@@ -127,7 +127,7 @@ def passenger_login():
         }
     }), 200
 
-@auth_bp.route('/api/password/forgot', methods=['POST'])
+@auth_bp.route('/password/forgot', methods=['POST'])
 def forgot_password():
     data = request.get_json()
     phone = data.get('phone')
@@ -145,7 +145,7 @@ def forgot_password():
     else:
         return jsonify({'error': 'Failed to send verification code'}), 500
 
-@auth_bp.route('/api/password/reset', methods=['POST'])
+@auth_bp.route('/password/reset', methods=['POST'])
 def reset_password():
     data = request.get_json()
     phone = data.get('phone')

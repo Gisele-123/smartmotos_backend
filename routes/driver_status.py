@@ -29,7 +29,7 @@ def driver_token_required(f):
         return f(current_driver, *args, **kwargs)
     return decorated
 
-@driver_status_bp.route('/api/driver/status', methods=['PUT'])
+@driver_status_bp.route('/driver/status', methods=['PUT'])
 @driver_token_required
 def update_driver_status(current_driver):
     data = request.get_json()
@@ -43,7 +43,7 @@ def update_driver_status(current_driver):
 
     return jsonify({'message': 'Driver status updated successfully'}), 200
 
-@driver_status_bp.route('/api/driver/update-location', methods=['PUT'])
+@driver_status_bp.route('/driver/update-location', methods=['PUT'])
 @driver_token_required
 def update_driver_location(current_driver):
     data = request.get_json()
@@ -70,7 +70,7 @@ def haversine(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
-@driver_status_bp.route('/api/driver/nearby', methods=['GET'])
+@driver_status_bp.route('/driver/nearby', methods=['GET'])
 def get_nearby_drivers():
     lat = float(request.args.get('lat'))
     lng = float(request.args.get('lng'))

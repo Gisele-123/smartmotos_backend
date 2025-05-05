@@ -29,21 +29,31 @@ class Booking(db.Model):
     pickup_time = db.Column(db.Time, nullable=False)
     booking_time = db.Column(db.DateTime, default=datetime.utcnow)
     driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'), nullable=True)
-    fare = db.Column(db.Float, nullable=False, default=0.0)  # Set default value for fare
+    fare = db.Column(db.Float, nullable=False, default=0.0)  
     status = db.Column(db.String(20), default='pending')
     payment_method = db.Column(db.String(50), nullable=False)
     payment_status = db.Column(db.String(20), default='pending')
+    location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
+    status = db.Column(db.String(20), nullable=False)
+    sub_total = db.Column(db.Float, nullable=False)
+    app_fee = db.Column(db.Float, nullable=False)
+    bargain_amount = db.Column(db.Float)
+    location = db.relationship('Location')
 
 class Driver(db.Model):
     __tablename__ = 'drivers'
-
+    
     id = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.String(20))
+    status = db.Column(db.String(20), default='pending_verification')  
+    service_provider = db.Column(db.String(20), nullable=False)  
+    vehicle_type = db.Column(db.String(20), nullable=False)  
+    license_number = db.Column(db.String(50), unique=True, nullable=False)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    location_updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    location_updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
 class DriverAvailability(db.Model):
     __tablename__ = 'driver_availabilities'
@@ -80,3 +90,22 @@ class DriverLocation(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     driver = db.relationship('Driver', backref=db.backref('location', uselist=False))
+
+class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pickup_lat = db.Column(db.Float, nullable=False)
+    pickup_lng = db.Column(db.Float, nullable=False)
+    dropoff_lat = db.Column(db.Float, nullable=False)
+    dropoff_lng = db.Column(db.Float, nullable=False)
+    distance_km = db.Column(db.Float, nullable=False)
+    duration_mins = db.Column(db.Float, nullable=False)
+    sub_total = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Negotiation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('bookings.id'), nullable=False)
+    offer_amount = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), nullable=False)  # pending, accepted, rejected
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    booking = db.relationship('Booking', backref='negotiations')

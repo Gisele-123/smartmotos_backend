@@ -29,7 +29,7 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return decorated
 
-@passenger_location_bp.route('/api/passenger/update-location', methods=['PUT'])
+@passenger_location_bp.route('/passenger/update-location', methods=['PUT'])
 @token_required
 def update_passenger_location(current_user):
     data = request.get_json()
@@ -47,7 +47,7 @@ def update_passenger_location(current_user):
 
     return jsonify({'message': 'Location updated successfully'}), 200
 
-@passenger_location_bp.route('/api/passenger/need-bike', methods=['PUT'])
+@passenger_location_bp.route('/passenger/need-bike', methods=['PUT'])
 @token_required
 def update_need_bike_status(current_user):
     data = request.get_json()
@@ -73,7 +73,7 @@ def haversine(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
-@passenger_location_bp.route('/api/passengers/nearby-demand', methods=['GET'])
+@passenger_location_bp.route('/passengers/nearby-demand', methods=['GET'])
 def get_nearby_passengers_with_demand():
     lat = float(request.args.get('lat'))
     lng = float(request.args.get('lng'))
@@ -103,7 +103,7 @@ def get_nearby_passengers_with_demand():
 
     return jsonify(nearby_passengers), 200
 
-@passenger_location_bp.route('/api/passengers/needing-bikes', methods=['GET'])
+@passenger_location_bp.route('/passengers/needing-bikes', methods=['GET'])
 def get_all_passengers_needing_bikes():
     recent_threshold = datetime.utcnow() - timedelta(minutes=15)
     passengers = Passenger.query.filter(

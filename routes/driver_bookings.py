@@ -29,7 +29,7 @@ def driver_token_required(f):
         return f(current_driver, *args, **kwargs)
     return decorated
 
-@driver_bookings_bp.route('/api/driver/accept-booking/<int:booking_id>', methods=['PUT'])
+@driver_bookings_bp.route('/driver/accept-booking/<int:booking_id>', methods=['PUT'])
 @driver_token_required
 def accept_booking(current_driver, booking_id):
     booking = Booking.query.get(booking_id)
@@ -46,7 +46,7 @@ def accept_booking(current_driver, booking_id):
 
     return jsonify({'message': 'Booking accepted successfully'}), 200
 
-@driver_bookings_bp.route('/api/driver/my-bookings', methods=['GET'])
+@driver_bookings_bp.route('/driver/my-bookings', methods=['GET'])
 @driver_token_required
 def my_bookings(current_driver):
     bookings = Booking.query.filter_by(driver_id=current_driver.id).all()
@@ -62,7 +62,7 @@ def my_bookings(current_driver):
 
     return jsonify(result), 200
 
-@driver_bookings_bp.route('/api/driver/complete-booking/<int:booking_id>', methods=['PUT'])
+@driver_bookings_bp.route('/driver/complete-booking/<int:booking_id>', methods=['PUT'])
 @driver_token_required
 def complete_booking(current_driver, booking_id):
     booking = Booking.query.get(booking_id)

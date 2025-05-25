@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import Booking, Passenger, Driver, RouteDistance, Location
 from extensions import db
-import datetime
+from datetime import datetime
 from functools import wraps
 import jwt
 from config import Config
@@ -9,14 +9,14 @@ from flutterwave import initialize_payment
 import uuid
 from enum import Enum
 import math
-import random
+import json
 
 booking_bp = Blueprint('booking', __name__)
 
 PRICING = {
-    'base_fare': 500,  # UGX
-    'per_km': 30,      # UGX per km
-    'per_minute': 1    # UGX per minute
+    'base_fare': 500,  # RWF
+    'per_km': 30,      # RWF per km
+    'per_minute': 1    # RWF per minute
 }
 
 class BookingStatus(Enum):
@@ -118,65 +118,73 @@ def token_required(f):
 @token_required
 def create_booking(current_user):
     data = request.get_json()
-    
-    # Validate required fields
-    if not all(k in data for k in ['pickup_location', 'dropoff_location']):
-        return jsonify({'error': 'Missing location data'}), 400
-    
-    # Calculate distance
+
+    required_fields = ['pickup_location', 'dropoff_location', 'pickup_time']
+    if not all(field in data for field in required_fields):
+        return jsonify({'error': 'Missing required booking fields'}), 400
+
     try:
         pickup = data['pickup_location']
         dropoff = data['dropoff_location']
-        
-        if isinstance(pickup, dict) and isinstance(dropoff, dict):
-            # Coordinate-based booking
-            distance = haversine(
-                float(pickup['lat']), float(pickup['lng']),
-                float(dropoff['lat']), float(dropoff['lng'])
-            )
-            location_str = f"{pickup['lat']},{pickup['lng']} to {dropoff['lat']},{dropoff['lng']}"
-        else:
-            # Address-based booking
-            return jsonify({'error': 'Address lookup requires implementation'}), 400
-        
-        # Calculate fare
-        fare = PRICING['base_fare'] + (PRICING['per_km'] * distance)
-        
-        # Find driver
-        driver = find_nearest_driver(
-            float(pickup['lat']), 
-            float(pickup['lng'])
+
+        if not (isinstance(pickup, dict) and isinstance(dropoff, dict)):
+            return jsonify({'error': 'Invalid location data'}), 400
+
+        distance = haversine(
+            float(pickup['lat']), float(pickup['lng']),
+            float(dropoff['lat']), float(dropoff['lng'])
         )
-        
+
+        fare = PRICING['base_fare'] + (PRICING['per_km'] * distance)
+        app_fee = 0.04 * fare
+        sub_total = fare + app_fee
+
+        driver = find_nearest_driver(float(pickup['lat']), float(pickup['lng']))
         if not driver:
             return jsonify({'error': 'No available drivers nearby'}), 404
         
-        # Create booking
+        bargain_amount = data.get('bargain_amount')
+        if bargain_amount is not None:
+            try:
+                bargain_amount = float(bargain_amount)
+                if bargain_amount <= 0:
+                    return jsonify({'error': 'Bargain amount must be greater than 0'}), 400
+            except ValueError:
+                return jsonify({'error': 'Invalid bargain amount format'}), 400
+
         booking = Booking(
             passenger_id=current_user.id,
             driver_id=driver.id,
-            pickup_location=location_str,
+            pickup_location=json.dumps(pickup),
+            dropoff_location=json.dumps(dropoff),
+            pickup_time=datetime.strptime(data['pickup_time'], '%H:%M').time(),
             fare=fare,
+            sub_total=sub_total,
+            app_fee=app_fee,
+            payment_method=data.get('payment_method', 'cash'),
             status=BookingStatus.PENDING.value,
-            payment_method=data.get('payment_method', 'cash')
+            bargain_amount=bargain_amount if bargain_amount else None
         )
-        
+
         db.session.add(booking)
         db.session.commit()
-        
+
         return jsonify({
             'booking_id': booking.id,
             'driver_id': driver.id,
             'fare': fare,
-            'status': booking.status
+            'sub_total': sub_total,
+            'app_fee': app_fee,
+            'status': booking.status,
+            'bargain_amount': bargain_amount
         }), 201
-        
-    except ValueError as e:
-        return jsonify({'error': 'Invalid coordinate values'}), 400
+
+    except ValueError:
+        return jsonify({'error': 'Invalid pickup_time or coordinates'}), 400
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
- 
+
 @booking_bp.route('/bookings/<int:booking_id>/accept', methods=['POST'])
 @token_required
 def accept_booking(current_user, booking_id):

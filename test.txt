@@ -1,0 +1,35 @@
+{
+    //   "name": "John", // http://127.0.0.1:5000/api/signup
+    //   "email": "john@example.com",
+    //   "phone": "+250798384666",
+    //   "code":"63031" // http://127.0.0.1:5000/api/verify/phone
+    //   "password": "pass1234" // http://127.0.0.1:5000/api/login
+    //   "confirm_password": "pass1234"
+    //  "latitude": 0.313611,
+    //   "longitude": 32.581111 //PUT http://127.0.0.1:5000/api/passenger/passenger/update-location
+    //   "pickup_lat": 0.313611, // http://127.0.0.1:5000/api/locations/calculate
+    //   "pickup_lng": 32.581111,
+    //   "dropoff_lat": 0.316667,
+    //   "dropoff_lng": 32.583333
+   "pickup_location": { // http://127.0.0.1:5000/api/bookings
+    "lat": 0.313611,
+    "lng": 32.581111
+  },
+  "dropoff_location": {
+    "lat": 0.316667,
+    "lng": 32.583333
+  },
+  "payment_method": "cash"
+// http://127.0.0.1:5000/api/driver/onboarding
+// "phone": "+250798384666",
+//   "service_provider": "MTN", driver_id: 1
+//   "vehicle_type": "bike",
+//   "license_number": "AB123456",
+//   "password": "driver123"
+//   "confirm_password": "driver123"
+// http://127.0.0.1:5000/api/driver/verify/phone
+// "phone": "+250798384666",
+// "code":"96499"
+
+// GET: http://127.0.0.1:5000/api/driver/profile
+}

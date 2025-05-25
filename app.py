@@ -22,7 +22,7 @@ def create_app():
     )
 
     with app.app_context():
-        db.drop_all()  # Uncomment to reset database
+        # db.drop_all()  # Uncomment to reset database
         db.create_all()
 
     from routes.passenger_auth import auth_bp
